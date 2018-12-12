@@ -6,9 +6,12 @@
 
 <h2>Tasks List</h2>
 
-<p>
-    @Html.ActionLink("Create New Task", "Create")
-</p>
+<div class="btn-group">
+    <a href="@Url.Action("Create")" class="myProvider btn btn-primary">
+        <i class="glyphicon glyphicon-plus"></i>  Add Task
+    </a>
+</div>
+
 <table class="table">
     <tr>
         <th>
@@ -41,9 +44,13 @@
             @Html.DisplayFor(modelItem => item.IsDone)
         </td>
         <td>
-            @Html.ActionLink("Edit", "Edit", new { id=item.Id }) |
-            @Html.ActionLink("Details", "Details", new { id=item.Id }) |
-            @Html.ActionLink("Delete", "Delete", new { id=item.Id })
+            <a href="@Url.Action("Edit", new { id=item.Id })" class="myProvider btn btn-info">
+                <i class="glyphicon glyphicon-pencil"></i> Edit
+            </a>
+           
+            <a href="@Url.Action("Delete", new { id=item.Id })" class="myProvider btn btn-danger">
+                <i class="glyphicon glyphicon-trash"></i> Delete
+            </a>
         </td>
     </tr>
 }
