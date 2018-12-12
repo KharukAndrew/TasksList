@@ -12,47 +12,20 @@
     </a>
 </div>
 
-<table class="table">
-    <tr>
-        <th>
-            @Html.DisplayNameFor(model => model.Date)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.Header)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.Text)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.IsDone)
-        </th>
-        <th></th>
-    </tr>
-
 @foreach (var item in Model) {
-    <tr>
-        <td>
-            @Html.DisplayFor(modelItem => item.Date)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.Header)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.Text)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.IsDone)
-        </td>
-        <td>
+    <div class="well">
+        <h3>
+            <strong>@item.Date</strong>
+            <strong>@item.Header</strong>
+            <strong>@item.IsDone</strong>
             <a href="@Url.Action("Edit", new { id=item.Id })" class="myProvider btn btn-info">
                 <i class="glyphicon glyphicon-pencil"></i> Edit
             </a>
-           
+
             <a href="@Url.Action("Delete", new { id=item.Id })" class="myProvider btn btn-danger">
                 <i class="glyphicon glyphicon-trash"></i> Delete
             </a>
-        </td>
-    </tr>
+        </h3>
+        <span class="lead">@item.Text</span>
+    </div>
 }
-
-</table>
