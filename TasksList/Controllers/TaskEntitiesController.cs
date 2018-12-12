@@ -1,23 +1,31 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Data;
-using System.Data.Entity;
-using System.Linq;
 using System.Net;
-using System.Web;
 using System.Web.Mvc;
 using TasksList.Models;
+using TasksList.Repository;
 
 namespace TasksList.Controllers
 {
     public class TaskEntitiesController : Controller
     {
-        private TasksListDb db = new TasksListDb();
+        private readonly ITasksRepository _repository;
+
+        public TaskEntitiesController(ITasksRepository repo)
+        {
+            _repository = repo;
+        }
 
         // GET: TaskEntities
         public ActionResult Index()
         {
-            return View(db.TaskEntities.ToList());
+            try
+            {
+                return View(_repository.GetAll());
+            }
+            catch (Exception ex)
+            {
+                return View("~/Views/Shared/Error.cshtml", ex);
+            }
         }
 
         // GET: TaskEntities/Details/5
@@ -27,12 +35,22 @@ namespace TasksList.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            TaskEntity taskEntity = db.TaskEntities.Find(id);
-            if (taskEntity == null)
+
+            TaskEntity task = null;
+            try
+            {
+                task = _repository.GetById(id.Value);
+            }
+            catch (Exception ex)
+            {
+                return View("~/Views/Shared/Error.cshtml", ex);
+            }
+
+            if (task == null)
             {
                 return HttpNotFound();
             }
-            return View(taskEntity);
+            return View(task);
         }
 
         // GET: TaskEntities/Create
@@ -42,20 +60,22 @@ namespace TasksList.Controllers
         }
 
         // POST: TaskEntities/Create
-        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
-        // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "Id,Date,Header,Text,IsDone")] TaskEntity taskEntity)
+        public ActionResult Create([Bind(Include = "Id,Date,Header,Text,IsDone")] TaskEntity task)
         {
-            if (ModelState.IsValid)
+            if (!ModelState.IsValid)
+                return View(task);
+
+            try
             {
-                db.TaskEntities.Add(taskEntity);
-                db.SaveChanges();
+                _repository.Create(task);
                 return RedirectToAction("Index");
             }
-
-            return View(taskEntity);
+            catch (Exception ex)
+            {
+                return View("~/Views/Shared/Error.cshtml", ex);
+            }
         }
 
         // GET: TaskEntities/Edit/5
@@ -65,28 +85,42 @@ namespace TasksList.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            TaskEntity taskEntity = db.TaskEntities.Find(id);
-            if (taskEntity == null)
+
+            TaskEntity task = null;
+
+            try
+            {
+                task = _repository.GetById(id.Value);
+            }
+            catch (Exception ex)
+            {
+                return View("~/Views/Shared/Error.cshtml", ex);
+            }
+
+            if (task == null)
             {
                 return HttpNotFound();
             }
-            return View(taskEntity);
+            return View(task);
         }
 
         // POST: TaskEntities/Edit/5
-        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
-        // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "Id,Date,Header,Text,IsDone")] TaskEntity taskEntity)
+        public ActionResult Edit([Bind(Include = "Id,Date,Header,Text,IsDone")] TaskEntity task)
         {
-            if (ModelState.IsValid)
+            if (!ModelState.IsValid)
+                return View(task);
+
+            try
             {
-                db.Entry(taskEntity).State = EntityState.Modified;
-                db.SaveChanges();
+                _repository.Update(task);
                 return RedirectToAction("Index");
             }
-            return View(taskEntity);
+            catch (Exception ex)
+            {
+                return View("~/Views/Shared/Error.cshtml", ex);
+            }
         }
 
         // GET: TaskEntities/Delete/5
@@ -96,12 +130,22 @@ namespace TasksList.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            TaskEntity taskEntity = db.TaskEntities.Find(id);
-            if (taskEntity == null)
+            TaskEntity task = null;
+
+            try
+            {
+                task = _repository.GetById(id.Value);
+            }
+            catch (Exception ex)
+            {
+                return View("~/Views/Shared/Error.cshtml", ex);
+            }
+
+            if (task == null)
             {
                 return HttpNotFound();
             }
-            return View(taskEntity);
+            return View(task);
         }
 
         // POST: TaskEntities/Delete/5
@@ -109,19 +153,15 @@ namespace TasksList.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult DeleteConfirmed(int id)
         {
-            TaskEntity taskEntity = db.TaskEntities.Find(id);
-            db.TaskEntities.Remove(taskEntity);
-            db.SaveChanges();
-            return RedirectToAction("Index");
-        }
-
-        protected override void Dispose(bool disposing)
-        {
-            if (disposing)
+            try
             {
-                db.Dispose();
+                _repository.Delete(id);
+                return RedirectToAction("Index");
             }
-            base.Dispose(disposing);
+            catch (Exception ex)
+            {
+                return View("~/Views/Shared/Error.cshtml", ex);
+            }
         }
     }
 }
