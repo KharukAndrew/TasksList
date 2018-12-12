@@ -28,31 +28,6 @@ namespace TasksList.Controllers
             }
         }
 
-        // GET: TaskEntities/Details/5
-        public ActionResult Details(int? id)
-        {
-            if (id == null)
-            {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-            }
-
-            TaskEntity task = null;
-            try
-            {
-                task = _repository.GetById(id.Value);
-            }
-            catch (Exception ex)
-            {
-                return View("~/Views/Shared/Error.cshtml", ex);
-            }
-
-            if (task == null)
-            {
-                return HttpNotFound();
-            }
-            return View(task);
-        }
-
         // GET: TaskEntities/Create
         public ActionResult Create()
         {
