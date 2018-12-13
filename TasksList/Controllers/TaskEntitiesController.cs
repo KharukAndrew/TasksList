@@ -3,6 +3,8 @@ using System.Net;
 using System.Web.Mvc;
 using TasksList.Models;
 using TasksList.Repository;
+using PagedList;
+using PagedList.Mvc;
 
 namespace TasksList.Controllers
 {
@@ -16,11 +18,13 @@ namespace TasksList.Controllers
         }
 
         // GET: TaskEntities
-        public ActionResult Index()
+        public ActionResult Index(int? page)
         {
             try
             {
-                return View(_repository.GetAll());
+                int pageSize = 3;
+                int pageNumber = (page ?? 1);
+                return View(_repository.GetAll().ToPagedList(pageNumber, pageSize));
             }
             catch (Exception ex)
             {

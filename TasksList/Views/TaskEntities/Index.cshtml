@@ -1,4 +1,5 @@
-﻿@model IEnumerable<TasksList.Models.TaskEntity>
+﻿@model PagedList.IPagedList<TasksList.Models.TaskEntity>
+@using PagedList.Mvc;
 
 @{
     ViewBag.Title = "Index";
@@ -12,7 +13,8 @@
     </a>
 </div>
 
-@foreach (var item in Model) {
+@foreach (var item in Model)
+{
     <div class="well">
         <h3>
             <strong>@item.Date</strong>
@@ -28,4 +30,14 @@
         </h3>
         <span class="lead">@item.Text</span>
     </div>
+
+}
+
+<br />
+
+@Html.PagedListPager(Model, page => Url.Action("Index", new { page }))
+
+@section scripts
+{
+    <link href="~/Content/PagedList.css" rel="stylesheet" />
 }

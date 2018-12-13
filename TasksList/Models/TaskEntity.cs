@@ -8,7 +8,6 @@ namespace TasksList.Models
         public int Id { get; set; }
 
         [Required(ErrorMessage = "Please enter Date")]
-        [DataType(DataType.Date)]
         public DateTime Date { get; set; }
 
         [Required(ErrorMessage = "Please enter Header")]
