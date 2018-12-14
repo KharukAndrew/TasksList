@@ -11,6 +11,7 @@ namespace TasksList.Controllers
     public class TaskEntitiesController : Controller
     {
         private readonly ITasksRepository _repository;
+        private const int pageSize = 3;
 
         public TaskEntitiesController(ITasksRepository repo)
         {
@@ -22,7 +23,6 @@ namespace TasksList.Controllers
         {
             try
             {
-                int pageSize = 3;
                 int pageNumber = (page ?? 1);
                 return View(_repository.GetAll().ToPagedList(pageNumber, pageSize));
             }
@@ -49,7 +49,10 @@ namespace TasksList.Controllers
             try
             {
                 _repository.Create(task);
-                return RedirectToAction("Index");
+
+                int returnPageNumber = GetPageNumberForReturn(task.Id);
+
+                return RedirectToAction("Index", "TaskEntities", new { page = returnPageNumber });
             }
             catch (Exception ex)
             {
@@ -70,11 +73,15 @@ namespace TasksList.Controllers
             try
             {
                 task = _repository.GetById(id.Value);
+
+                ViewBag.Page = GetPageNumberForReturn(task.Id);
             }
             catch (Exception ex)
             {
                 return View("~/Views/Shared/Error.cshtml", ex);
             }
+
+            
 
             if (task == null)
             {
@@ -94,7 +101,10 @@ namespace TasksList.Controllers
             try
             {
                 _repository.Update(task);
-                return RedirectToAction("Index");
+
+                int returnPageNumber = GetPageNumberForReturn(task.Id);
+
+                return RedirectToAction("Index", "TaskEntities", new { page = returnPageNumber });
             }
             catch (Exception ex)
             {
@@ -142,5 +152,27 @@ namespace TasksList.Controllers
                 return View("~/Views/Shared/Error.cshtml", ex);
             }
         }
+
+        private int GetPageNumberForReturn(int id)
+        {
+            var list = _repository.GetAll();
+
+            int numberTask = 0;
+
+            foreach (var item in list)
+            {
+                numberTask++;
+                if (item.Id == id)
+                    break;
+            }
+
+            double page = (double)numberTask / pageSize;
+
+            if ((page - (int)page) == 0)       
+                return (int)page;
+
+            return (int)page + 1;
+        }
+
     }
 }
