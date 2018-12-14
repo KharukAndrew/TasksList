@@ -5,6 +5,7 @@ using TasksList.Models;
 using TasksList.Repository;
 using PagedList;
 using PagedList.Mvc;
+using System.Collections.Generic;
 
 namespace TasksList.Controllers
 {
@@ -160,23 +161,39 @@ namespace TasksList.Controllers
 
         public ActionResult Done(int id)
         {
-            TaskEntity task = _repository.GetById(id);
+            try
+            {
+                TaskEntity task = _repository.GetById(id);
 
-            if (task.IsDone)
-                task.IsDone = false;
-            else
-                task.IsDone = true;
+                if (task.IsDone)
+                    task.IsDone = false;
+                else
+                    task.IsDone = true;
 
-            _repository.Update(task);
+                _repository.Update(task);
 
-            int returnPageNumber = GetPageNumberForReturn(id);
+                int returnPageNumber = GetPageNumberForReturn(id);
 
-            return RedirectToAction("Index", new { page = returnPageNumber });
+                return RedirectToAction("Index", new { page = returnPageNumber });
+            }
+            catch (Exception ex)
+            {
+                return View("~/Views/Shared/Error.cshtml", ex);
+            }
+
         }
 
         private int GetPageNumberForReturn(int id)
         {
-            var list = _repository.GetAll();
+            IEnumerable<TaskEntity> list = null;
+            try
+            {
+                list = _repository.GetAll();
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
 
             int numberTask = 0;
 
