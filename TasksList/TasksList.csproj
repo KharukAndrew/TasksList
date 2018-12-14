@@ -231,6 +231,7 @@
     <Content Include="Views\TaskEntities\Edit.cshtml" />
     <Content Include="Views\TaskEntities\Index.cshtml" />
     <Content Include="Views\TaskEntities\Create.cshtml" />
+    <Content Include="Views\TaskEntities\_TaskFromList.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

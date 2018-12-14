@@ -15,7 +15,8 @@
 
 @foreach (var item in Model)
 {
-<div class="well">
+    @Html.Partial("_TaskFromList", item)
+@*<div class="well">
     <div class="row">
         <div class="col-md-9">
             <h3>
@@ -42,7 +43,7 @@
     </div>
        
         <span class="lead">@item.Text</span>
-  </div>
+  </div>*@
 
         }
 
