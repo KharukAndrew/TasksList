@@ -158,6 +158,22 @@ namespace TasksList.Controllers
             }
         }
 
+        public ActionResult Done(int id)
+        {
+            TaskEntity task = _repository.GetById(id);
+
+            if (task.IsDone)
+                task.IsDone = false;
+            else
+                task.IsDone = true;
+
+            _repository.Update(task);
+
+            int returnPageNumber = GetPageNumberForReturn(id);
+
+            return RedirectToAction("Index", new { page = returnPageNumber });
+        }
+
         private int GetPageNumberForReturn(int id)
         {
             var list = _repository.GetAll();
