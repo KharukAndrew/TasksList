@@ -124,6 +124,8 @@ namespace TasksList.Controllers
             try
             {
                 task = _repository.GetById(id.Value);
+
+                ViewBag.Page = GetPageNumberForReturn(task.Id);
             }
             catch (Exception ex)
             {
@@ -144,8 +146,11 @@ namespace TasksList.Controllers
         {
             try
             {
+                int returnPageNumber = GetPageNumberForReturn(id);
+
                 _repository.Delete(id);
-                return RedirectToAction("Index");
+
+                return RedirectToAction("Index", new { page = returnPageNumber });
             }
             catch (Exception ex)
             {

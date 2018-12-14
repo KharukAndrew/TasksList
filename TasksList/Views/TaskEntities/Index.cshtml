@@ -16,42 +16,13 @@
 @foreach (var item in Model)
 {
     @Html.Partial("_TaskFromList", item)
-@*<div class="well">
-    <div class="row">
-        <div class="col-md-9">
-            <h3>
-                <strong>@item.Date</strong>
-                <strong>@item.Header</strong>
-            </h3>
-        </div>
-        <div class="col-md-3" align="right">
-            <h3>
-                @if (item.IsDone == true)
-                {
-                    <strong>DONE</strong>
-                }
+}
 
-                <a href="@Url.Action("Edit", new { id=item.Id })" class="myProvider btn btn-info">
-                    <i class="glyphicon glyphicon-pencil"></i> Edit
-                </a>
+<br />
 
-                <a href="@Url.Action("Delete", new { id=item.Id })" class="myProvider btn btn-danger">
-                    <i class="glyphicon glyphicon-trash"></i> Delete
-                </a>
-            </h3>
-        </div>
-    </div>
-       
-        <span class="lead">@item.Text</span>
-  </div>*@
+@Html.PagedListPager(Model, page => Url.Action("Index", new { page }))
 
-        }
-
-        <br />
-
-        @Html.PagedListPager(Model, page => Url.Action("Index", new { page }))
-
-        @section scripts
+@section scripts
 {
-            <link href="~/Content/PagedList.css" rel="stylesheet" />
-        }
+    <link href="~/Content/PagedList.css" rel="stylesheet" />
+}
