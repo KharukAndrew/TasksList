@@ -2,6 +2,7 @@
 using Ninject.Modules;
 using Ninject.Web.Mvc;
 using System.Data.Entity;
+using System.Linq;
 using System.Web.Mvc;
 using System.Web.Optimization;
 using System.Web.Routing;
@@ -24,6 +25,10 @@ namespace TasksList
             NinjectModule registrations = new NinjectRegistrations();
             var kernel = new StandardKernel(registrations);
             DependencyResolver.SetResolver(new NinjectDependencyResolver(kernel));
+
+            var prov = ModelValidatorProviders.Providers;
+            if (ModelValidatorProviders.Providers.OfType<DataAnnotationsModelValidatorProvider>().FirstOrDefault() != null)
+                prov.Remove(ModelValidatorProviders.Providers.OfType<DataAnnotationsModelValidatorProvider>().First());
         }
     }
 }
