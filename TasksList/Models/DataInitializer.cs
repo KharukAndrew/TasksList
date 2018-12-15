@@ -4,7 +4,7 @@ using System.Data.Entity;
 
 namespace TasksList.Models
 {
-    public class DataInitializer : DropCreateDatabaseIfModelChanges<TasksListDb>
+    public class DataInitializer : DropCreateDatabaseAlways<TasksListDb>
     {
         protected override void Seed(TasksListDb db)
         {

@@ -14,7 +14,7 @@ namespace TasksList.Models
         public string Header { get; set; }
 
         [Required(ErrorMessage = "Please enter Text")]
-        [DataType(DataType.Text)]
+        [DataType(DataType.MultilineText)]
         public string Text { get; set; }
         public bool IsDone { get; set; }
     }
